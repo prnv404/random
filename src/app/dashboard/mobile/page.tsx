@@ -117,7 +117,6 @@ const MobileDashboardComponent = () => {
     return (
         <main className="p-4 space-y-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
-                <h1 className="text-xl font-bold">Mobile Dashboard</h1>
                 <Tabs defaultValue={period} onValueChange={(value) => setPeriod(value as any)} className="w-full sm:w-auto">
                     <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="daily">Daily</TabsTrigger>
