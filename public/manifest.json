@@ -2,7 +2,7 @@
   "name": "SNAP GRID",
   "short_name": "SNAPGRID",
   "description": "A centralized dashboard to manage all available services for Akshaya Centers.",
-  "start_url": "/",
+  "start_url": "/dashboard/mobile",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
