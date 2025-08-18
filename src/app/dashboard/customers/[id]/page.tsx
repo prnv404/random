@@ -203,13 +203,13 @@ const CustomerDetailComponent = () => {
                             </DialogHeader>
                             <form onSubmit={handleAddDocument}>
                                 <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="docType" className="text-right">Type</Label>
-                                        <Input id="docType" value={newDocument.docType} onChange={(e) => setNewDocument({...newDocument, docType: e.target.value})} className="col-span-3" placeholder="e.g., Passport" required />
+                                    <div className="space-y-2">
+                                        <Label htmlFor="docType">Type</Label>
+                                        <Input id="docType" value={newDocument.docType} onChange={(e) => setNewDocument({...newDocument, docType: e.target.value})} placeholder="e.g., Passport" required />
                                     </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="expiryDate" className="text-right">Expiry Date</Label>
-                                        <Input id="expiryDate" type="date" value={newDocument.expiryDate} onChange={(e) => setNewDocument({...newDocument, expiryDate: e.target.value})} className="col-span-3" required />
+                                    <div className="space-y-2">
+                                        <Label htmlFor="expiryDate">Expiry Date</Label>
+                                        <Input id="expiryDate" type="date" value={newDocument.expiryDate} onChange={(e) => setNewDocument({...newDocument, expiryDate: e.target.value})} required />
                                     </div>
                                 </div>
                                 <DialogFooter>

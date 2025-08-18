@@ -26,7 +26,7 @@ export const TicketHeader = ({
     onTicketCreated,
 }: TicketHeaderProps) => {
     return (
-        <div className="p-4 md:p-10 md:pb-4">
+        <div className="p-4 md:px-10 pt-6">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-semibold">Service Tickets</h1>
@@ -44,9 +44,9 @@ export const TicketHeader = ({
                         onTicketCreated={onTicketCreated}
                     />
                      <Button asChild variant="outline" size="sm" className="gap-1">
-                        <Link href="/dashboard/settings">
+                        <Link href="/dashboard/settings/services">
                             <Settings className="h-4 w-4" />
-                            Settings
+                            Manage Services
                         </Link>
                     </Button>
                 </div>

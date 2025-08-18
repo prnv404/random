@@ -58,9 +58,10 @@ const TicketsPageComponent = () => {
   
   const [confirmationState, setConfirmationState] = useState<{ isOpen: boolean; ticketId: string | null; targetStatus: Ticket['status'] | null }>({ isOpen: false, ticketId: null, targetStatus: null });
 
-  const fetchInitialData = useCallback(async () => {
+  const fetchInitialData = useCallback(async (showLoading = true) => {
     if (!authToken) return;
-    setIsLoading(true);
+    if(showLoading) setIsLoading(true);
+
     try {
         const [tickets, usersData, servicesData] = await Promise.all([
             listTickets({
@@ -78,7 +79,7 @@ const TicketsPageComponent = () => {
     } catch (error) {
         toast({ variant: 'destructive', title: 'Error fetching data', description: error instanceof Error ? error.message : 'Could not fetch initial data.' });
     } finally {
-        setIsLoading(false);
+        if(showLoading) setIsLoading(false);
     }
   }, [authToken, filters, toast]);
 
@@ -96,7 +97,7 @@ const TicketsPageComponent = () => {
     try {
         await updateTicketStatus(ticketId, { status: newStatus, amount }, authToken);
         toast({ title: "Status Updated", description: `Ticket ${ticketId} moved to ${newStatus}.`});
-        await fetchInitialData(); // Re-fetch to get latest state
+        await fetchInitialData(false); // Re-fetch to get latest state, without global loading
     } catch (error) {
         setTicketData(originalTickets); // Revert on error
         toast({ variant: 'destructive', title: 'Update Failed', description: error instanceof Error ? error.message : 'Could not update status.' });
@@ -231,24 +232,24 @@ const TicketsPageComponent = () => {
 
   return (
     <>
-    <main className="flex flex-col h-full" onDragEnd={handleDragEnd}>
-        <TicketHeader 
-            isCreateDialogOpen={isCreateDialogOpen}
-            setIsCreateDialogOpen={setIsCreateDialogOpen}
-            users={users}
-            services={services}
-            uniqueServiceTypes={uniqueServiceTypes}
-            onTicketCreated={fetchInitialData}
-        />
+    <div className="h-full flex flex-col" onDragEnd={handleDragEnd}>
+       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <TicketHeader 
+                isCreateDialogOpen={isCreateDialogOpen}
+                setIsCreateDialogOpen={setIsCreateDialogOpen}
+                users={users}
+                services={services}
+                uniqueServiceTypes={uniqueServiceTypes}
+                onTicketCreated={() => fetchInitialData(true)}
+            />
+            <TicketFilters 
+                filters={filters}
+                setFilters={setFilters}
+                users={users}
+                uniqueServiceTypes={uniqueServiceTypes}
+            />
+       </div>
 
-       <div className="sticky top-16 z-10 bg-background/95 px-4 md:px-10 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-        <TicketFilters 
-            filters={filters}
-            setFilters={setFilters}
-            users={users}
-            uniqueServiceTypes={uniqueServiceTypes}
-        />
-      </div>
 
        <div className="flex-1 overflow-y-auto">
             <TicketBoard 
@@ -267,7 +268,7 @@ const TicketsPageComponent = () => {
                 servicePortals={servicePortals}
             />
        </div>
-    </main>
+    </div>
     {selectedTicket && (
         <SendAlertDialog 
             isOpen={isAlertOpen}
@@ -293,7 +294,7 @@ const TicketsPageComponent = () => {
             editingTicket={editingTicket}
             setEditingTicket={setEditingTicket}
             users={users}
-            onTicketUpdated={fetchInitialData}
+            onTicketUpdated={() => fetchInitialData(true)}
         />
     )}
       <AlertDialog open={confirmationState.isOpen} onOpenChange={(open) => !open && setConfirmationState({ isOpen: false, ticketId: null, targetStatus: null })}>
@@ -319,3 +320,4 @@ const TicketsPageComponent = () => {
 const TicketsPage = dynamic(() => Promise.resolve(TicketsPageComponent), { ssr: false });
 
 export default TicketsPage;
+

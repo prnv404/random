@@ -97,7 +97,7 @@ export const TicketBoard = ({
     }
 
     return (
-        <div className="grid flex-1 gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4 md:p-10">
+        <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4 md:p-10">
             {statusOrder.map(status => (
                 <TicketColumn
                     key={status}
@@ -122,3 +122,5 @@ export const TicketBoard = ({
 
 // Add Card to imports to use it in mobile view
 import { Card } from '@/components/ui/card';
+
+    

@@ -11,7 +11,6 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { mockFeedback } from '@/components/dashboard/feedback-analytics';
 import { cn } from '@/lib/utils';
 import { 
     IndianRupee, 
@@ -21,8 +20,7 @@ import {
     TrendingUp, 
     TrendingDown, 
     Minus,
-    Award,
-    Star
+    Award
 } from 'lucide-react';
 
 const ChangeIndicator = ({ change, changeType }: { change: string; changeType: 'increase' | 'decrease' | 'no_change' }) => {
@@ -47,7 +45,7 @@ const ChangeIndicator = ({ change, changeType }: { change: string; changeType: '
 };
 
 const StatCard = ({ title, metric, icon, isLoading }: { title: string, metric: DashboardMetric | undefined, icon: React.ReactNode, isLoading: boolean }) => (
-    <Card className="flex-1">
+    <Card>
         <CardHeader className="p-3 pb-0">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
                 <span>{title}</span>
@@ -59,8 +57,8 @@ const StatCard = ({ title, metric, icon, isLoading }: { title: string, metric: D
                 <Skeleton className="h-8 w-3/4" />
             ) : (
                 <>
-                    <p className="text-2xl font-bold">{metric?.current.toLocaleString('en-IN')}</p>
-                    <ChangeIndicator {...metric!} />
+                    <p className="text-2xl font-bold">{title === 'Revenue' && '₹'}{metric?.current.toLocaleString('en-IN')}</p>
+                    {metric && <ChangeIndicator {...metric} />}
                 </>
             )}
         </CardContent>
@@ -106,14 +104,6 @@ const MobileDashboardComponent = () => {
         fetchDashboardData();
     }, [fetchDashboardData]);
 
-    const feedbackSummary = useMemo(() => {
-        const totalReviews = mockFeedback.length;
-        if (totalReviews === 0) return { averageRating: 0, totalReviews: 0 };
-        const totalRating = mockFeedback.reduce((acc, fb) => acc + fb.rating, 0);
-        const averageRating = parseFloat((totalRating / totalReviews).toFixed(1));
-        return { averageRating, totalReviews };
-    }, []);
-
     return (
         <main className="p-4 space-y-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
@@ -131,25 +121,26 @@ const MobileDashboardComponent = () => {
                     <CardTitle>Key Metrics</CardTitle>
                     <CardDescription>A snapshot of today's activity.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="flex flex-col sm:flex-row gap-4">
-                        <StatCard title="Revenue" metric={summaryData?.totalRevenue} icon={<IndianRupee className="h-4 w-4" />} isLoading={isLoading} />
-                        <StatCard title="Customers" metric={summaryData?.totalCustomers} icon={<Users className="h-4 w-4" />} isLoading={isLoading} />
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-4">
-                        <StatCard title="Services" metric={summaryData?.servicesDelivered} icon={<Briefcase className="h-4 w-4" />} isLoading={isLoading} />
-                        <Card className="flex-1">
-                            <CardHeader className="p-3 pb-0">
-                                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
-                                    <span>Open Tickets</span>
-                                    <Activity className="h-4 w-4" />
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-3">
-                                {isLoading ? <Skeleton className="h-8 w-3/4" /> : <p className="text-2xl font-bold">{summaryData?.openTickets.current}</p>}
-                            </CardContent>
-                        </Card>
-                    </div>
+                <CardContent className="grid grid-cols-2 gap-4">
+                    <StatCard title="Revenue" metric={summaryData?.totalRevenue} icon={<IndianRupee className="h-4 w-4" />} isLoading={isLoading} />
+                    <StatCard title="Customers" metric={summaryData?.totalCustomers} icon={<Users className="h-4 w-4" />} isLoading={isLoading} />
+                    <StatCard title="Services" metric={summaryData?.servicesDelivered} icon={<Briefcase className="h-4 w-4" />} isLoading={isLoading} />
+                     <Card>
+                        <CardHeader className="p-3 pb-0">
+                            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+                                <span>Open Tickets</span>
+                                <Activity className="h-4 w-4" />
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-3">
+                            {isLoading ? <Skeleton className="h-8 w-3/4" /> : 
+                                <>
+                                    <p className="text-2xl font-bold">{summaryData?.openTickets.current}</p>
+                                    <p className="text-xs text-muted-foreground">{summaryData?.openTickets.pendingApproval} pending</p>
+                                </>
+                            }
+                        </CardContent>
+                    </Card>
                 </CardContent>
             </Card>
             
@@ -158,8 +149,8 @@ const MobileDashboardComponent = () => {
                     <CardTitle>Employee Performance</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <ScrollArea className="h-[250px]">
-                        <div className="space-y-4">
+                    <ScrollArea>
+                        <div className="space-y-4 pr-4">
                             {isLoading ? Array.from({length: 3}).map((_,i) => <Skeleton key={i} className="h-12 w-full" />) :
                             employeePerformance.map((emp, index) => (
                                 <div key={emp.employeeId} className="flex items-center gap-4">
@@ -188,8 +179,8 @@ const MobileDashboardComponent = () => {
                     <CardTitle>Service Performance</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <ScrollArea className="h-[250px]">
-                            <div className="space-y-4">
+                    <ScrollArea>
+                            <div className="space-y-4 pr-4">
                                 {isLoading ? Array.from({length: 3}).map((_,i) => <Skeleton key={i} className="h-12 w-full" />) :
                                 servicePerformance.map(service => (
                                     <div key={service.serviceName} className="flex items-center gap-4">
@@ -208,47 +199,6 @@ const MobileDashboardComponent = () => {
                 </CardContent>
             </Card>
             
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <div>
-                        <CardTitle>Customer Feedback</CardTitle>
-                        <CardDescription>Latest reviews from customers.</CardDescription>
-                    </div>
-                    <div className="text-right">
-                        <div className="flex items-baseline gap-1">
-                            <p className="text-2xl font-bold">{feedbackSummary.averageRating}</p>
-                            <p className="text-sm text-muted-foreground">/ 5</p>
-                        </div>
-                        <p className="text-xs text-muted-foreground">{feedbackSummary.totalReviews} reviews</p>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <ScrollArea className="h-[400px]">
-                        {mockFeedback.map(fb => (
-                            <div key={fb.id} className="p-3 border-b last:border-0">
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="flex items-center gap-2">
-                                            <Avatar className="h-8 w-8">
-                                            <AvatarImage src={fb.customerAvatar} />
-                                            <AvatarFallback>{fb.customerName.charAt(0)}</AvatarFallback>
-                                        </Avatar>
-                                        <div>
-                                            <p className="text-sm font-semibold">{fb.customerName}</p>
-                                                <p className="text-xs text-muted-foreground">{fb.serviceName}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-0.5">
-                                        {Array.from({ length: 5 }).map((_, i) => (
-                                            <Star key={i} className={cn("h-4 w-4", i < fb.rating ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground/30')} />
-                                        ))}
-                                    </div>
-                                </div>
-                                <p className="text-sm text-muted-foreground italic">"{fb.comment}"</p>
-                            </div>
-                        ))}
-                    </ScrollArea>
-                </CardContent>
-            </Card>
         </main>
     );
 };

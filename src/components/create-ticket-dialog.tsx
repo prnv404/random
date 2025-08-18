@@ -140,7 +140,7 @@ export const CreateTicketDialog = ({ isOpen, setIsOpen, users, services, uniqueS
                     Create Ticket
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Create New Service Ticket</DialogTitle>
                     <DialogDescription>
@@ -149,11 +149,11 @@ export const CreateTicketDialog = ({ isOpen, setIsOpen, users, services, uniqueS
                 </DialogHeader>
                 <form onSubmit={handleCreateTicket}>
                     <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="phone" className="text-right">
+                        <div className="space-y-2">
+                            <Label htmlFor="phone">
                                 Phone
                             </Label>
-                            <div className="col-span-3 relative">
+                            <div className="relative">
                                 <Command shouldFilter={false} className="overflow-visible bg-transparent" ref={commandRef}>
                                     <CommandInput
                                         id="phone"
@@ -203,8 +203,8 @@ export const CreateTicketDialog = ({ isOpen, setIsOpen, users, services, uniqueS
                                 </Command>
                             </div>
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
+                        <div className="space-y-2">
+                            <Label htmlFor="name">
                                 Name
                             </Label>
                             <Input
@@ -213,12 +213,11 @@ export const CreateTicketDialog = ({ isOpen, setIsOpen, users, services, uniqueS
                                 value={newTicket.customerName}
                                 onChange={e => handleInputChange('customerName', e.target.value)}
                                 placeholder="Customer's Name"
-                                className="col-span-3"
                                 onKeyDown={(e) => handleKeyDown(e, assignToTriggerRef)}
                             />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="assign-to" className="text-right">
+                        <div className="space-y-2">
+                            <Label htmlFor="assign-to">
                                 Assign To
                             </Label>
                             <Select
@@ -228,8 +227,8 @@ export const CreateTicketDialog = ({ isOpen, setIsOpen, users, services, uniqueS
                                 value={newTicket.userId}
                             >
                                 <SelectTrigger
+                                    id="assign-to"
                                     ref={assignToTriggerRef}
-                                    className="col-span-3"
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') {
                                             e.preventDefault();
@@ -246,17 +245,18 @@ export const CreateTicketDialog = ({ isOpen, setIsOpen, users, services, uniqueS
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="service-type" className="text-right">
+                        <div className="space-y-2">
+                            <Label htmlFor="service-type">
                                 Service
                             </Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button
+                                        id="service-type"
                                         ref={servicePopoverTriggerRef}
                                         variant="outline"
                                         role="combobox"
-                                        className="col-span-3 justify-between font-normal"
+                                        className="w-full justify-between font-normal"
                                     >
                                         {newTicket.serviceType
                                             ? uniqueServiceTypes.find((type) => type.toLowerCase() === newTicket.serviceType.toLowerCase()) || 'Custom: ' + newTicket.serviceType
@@ -264,7 +264,7 @@ export const CreateTicketDialog = ({ isOpen, setIsOpen, users, services, uniqueS
                                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-[300px] p-0">
+                                <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
                                     <Command>
                                         <CommandInput
                                             ref={serviceInputRef}
@@ -309,8 +309,8 @@ export const CreateTicketDialog = ({ isOpen, setIsOpen, users, services, uniqueS
                                 </PopoverContent>
                             </Popover>
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="amount" className="text-right">
+                        <div className="space-y-2">
+                            <Label htmlFor="amount">
                                 Amount
                             </Label>
                             <Input
@@ -320,7 +320,6 @@ export const CreateTicketDialog = ({ isOpen, setIsOpen, users, services, uniqueS
                                 onChange={e => handleInputChange('amount', e.target.value)}
                                 type="number"
                                 placeholder="Optional"
-                                className="col-span-3"
                                 onKeyDown={(e) => handleKeyDown(e, submitButtonRef)}
                             />
                         </div>

@@ -22,7 +22,7 @@ export const listCustomers = (params: ListCustomersParams, token: string | null)
 
 type CreateCustomerPayload = {
     name: string;
-    email: string;
+    email: string | null;
     phone: string;
 };
 

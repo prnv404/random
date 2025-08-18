@@ -21,7 +21,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { IndianRupee, Star, Wand2 } from 'lucide-react';
 import { StatsCards } from '@/components/dashboard/stats-cards';
 import { PerformanceTables } from '@/components/dashboard/performance-tables';
-import { FeedbackAnalytics } from '@/components/dashboard/feedback-analytics';
 import { Badge } from '@/components/ui/badge';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
@@ -252,8 +251,6 @@ useEffect(() => {
         isPerformanceLoading={isPerformanceLoading}
       />
       
-      <FeedbackAnalytics />
-
     </main>
   );
 };

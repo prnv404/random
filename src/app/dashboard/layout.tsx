@@ -160,7 +160,7 @@ export default function DashboardLayout({
                     </Link>
                 </SidebarFooter>
             </Sidebar>
-            <SidebarInset className="flex flex-col h-screen">
+            <SidebarInset className="flex flex-col h-screen overflow-hidden">
                 <DashboardHeader className="sticky top-0 z-10" />
                 <main className="flex-1 overflow-y-auto">{children}</main>
             </SidebarInset>
@@ -169,3 +169,5 @@ export default function DashboardLayout({
       </SignedIn>
   );
 }
+
+    

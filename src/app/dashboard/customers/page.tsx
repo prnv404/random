@@ -117,8 +117,8 @@ const CustomersPageComponent = () => {
     const formData = new FormData(event.currentTarget);
     const newCustomerPayload = {
       name: formData.get('name') as string,
-      email: formData.get('email') as string,
       phone: formData.get('phone') as string,
+      email: null,
     };
     try {
       await createCustomer(newCustomerPayload, authToken);
@@ -157,7 +157,7 @@ const CustomersPageComponent = () => {
                 Create Customer
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent>
               <DialogHeader>
                 <DialogTitle>Create New Customer</DialogTitle>
                 <DialogDescription>
@@ -165,23 +165,17 @@ const CustomersPageComponent = () => {
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleCreateCustomer} className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
+                <div className="space-y-2">
+                  <Label htmlFor="name">
                     Name
                   </Label>
-                  <Input id="name" name="name" placeholder="Customer's Name" className="col-span-3" required />
+                  <Input id="name" name="name" placeholder="Customer's Name" required />
                 </div>
-                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="email" className="text-right">
-                    Email
-                  </Label>
-                  <Input id="email" name="email" type="email" placeholder="customer@example.com (Optional)" className="col-span-3" />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="phone" className="text-right">
+                <div className="space-y-2">
+                  <Label htmlFor="phone">
                     Phone
                   </Label>
-                  <Input id="phone" name="phone" placeholder="Customer's Phone" className="col-span-3" required/>
+                  <Input id="phone" name="phone" placeholder="Customer's Phone" required/>
                 </div>
                  <DialogFooter>
                     <Button type="submit">Create Customer</Button>
