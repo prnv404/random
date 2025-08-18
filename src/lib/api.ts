@@ -1,6 +1,16 @@
 
 'use client';
 
+class ApiError extends Error {
+    status: number;
+    constructor(message: string, status: number) {
+        super(message);
+        this.name = 'ApiError';
+        this.status = status;
+    }
+}
+
+
 type FetcherOptions = {
     method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
     body?: any;
@@ -51,16 +61,21 @@ export const fetcher = async <T>(url: string, options: FetcherOptions = {}): Pro
 
         if (!response.ok || !responseData.success) {
             const errorMessage = responseData.error || `Request failed with status ${response.status}`;
-            throw new Error(errorMessage);
+            throw new ApiError(errorMessage, response.status);
         }
 
         return responseData.data;
 
     } catch (error) {
         console.error('API Fetcher Error:', error);
-        if (error instanceof Error) {
-            throw new Error(`API request failed: ${error.message}`);
+        if (error instanceof ApiError) {
+            throw error; // Re-throw ApiError with status
         }
-        throw new Error('An unknown error occurred during the API request.');
+        if (error instanceof Error) {
+            throw new ApiError(`API request failed: ${error.message}`, 0); // 0 for network or other client-side errors
+        }
+        throw new ApiError('An unknown error occurred during the API request.', 0);
     }
 };
+
+export { ApiError };

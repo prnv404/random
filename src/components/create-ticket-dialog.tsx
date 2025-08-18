@@ -224,17 +224,16 @@ export const CreateTicketDialog = ({ isOpen, setIsOpen, users, services, uniqueS
                             <Select
                                 onValueChange={(value) => {
                                     handleInputChange('userId', value);
-                                    setTimeout(() => servicePopoverTriggerRef.current?.focus(), 0);
                                 }}
                                 value={newTicket.userId}
                             >
                                 <SelectTrigger
                                     ref={assignToTriggerRef}
                                     className="col-span-3"
-                                    onFocus={(e) => e.currentTarget.click()}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') {
                                             e.preventDefault();
+                                            servicePopoverTriggerRef.current?.focus();
                                         }
                                     }}
                                 >

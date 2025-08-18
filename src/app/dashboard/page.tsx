@@ -167,7 +167,13 @@ useEffect(() => {
 
   return (
     <main className="flex flex-1 flex-col gap-6 p-4 md:gap-8 md:p-10">
-        <div className="flex justify-end">
+       <div className="flex items-center justify-between">
+            <div>
+                <h1 className="text-2xl font-semibold">Dashboard</h1>
+                <p className="text-muted-foreground">
+                    An overview of your business performance.
+                </p>
+            </div>
             <Tabs defaultValue={period} onValueChange={(value) => setPeriod(value as any)} className="w-auto">
                 <TabsList>
                     <TabsTrigger value="daily">Daily</TabsTrigger>

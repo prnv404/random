@@ -8,17 +8,13 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter
 } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
-import { Mail, MessageSquare, Phone, Wallet, Sun, Moon, Bell } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import { useToast } from '@/hooks/use-toast';
+import { Plug, SlidersHorizontal, ArrowRight } from 'lucide-react';
+import dynamic from 'next/dynamic';
 
 const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -26,21 +22,15 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
+const GoogleDriveIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" {...props}>
+        <path d="M7.71 5l-4.86 8.42l1.63 2.82h14.97l1.63-2.82L16.29 5H7.71zM8.5 17.5l-3.3-5.71l-1.63 2.82L8.5 20.32l3.29-5.71h-6.6zM15.5 17.5l3.3-5.71l1.63 2.82L15.5 20.32l-3.29-5.71h6.6z"/>
+    </svg>
+);
+
+
 const SettingsPageComponent = () => {
     const { toast } = useToast();
-    const usageData = {
-        'SMS': { used: 1250, limit: 5000, unit: 'messages' },
-        'WhatsApp': { used: 340, limit: 1000, unit: 'messages' },
-        'Email': { used: 8000, limit: 10000, unit: 'emails' },
-        'Call': { used: 120, limit: 500, unit: 'minutes' }
-    };
-
-    const channelIcons = {
-        SMS: <MessageSquare className="h-5 w-5 text-sky-500" />,
-        WhatsApp: <WhatsAppIcon className="h-5 w-5 text-green-500" />,
-        Email: <Mail className="h-5 w-5 text-blue-500" />,
-        Call: <Phone className="h-5 w-5 text-gray-600" />,
-    };
 
     const handleSaveChanges = () => {
         toast({
@@ -51,76 +41,81 @@ const SettingsPageComponent = () => {
 
     return (
          <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
-            <div className="max-w-4xl mx-auto w-full space-y-8">
-                 <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Bell className="h-5 w-5" />
-                            Notification Settings
-                        </CardTitle>
-                        <CardDescription>Manage how you receive notifications from the platform.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
-                            <div className="space-y-0.5">
-                                <Label>Email Notifications</Label>
-                                <p className="text-xs text-muted-foreground">
-                                    Receive updates about ticket status and weekly summaries.
-                                </p>
-                            </div>
-                            <Switch defaultChecked />
-                        </div>
-                        <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
-                            <div className="space-y-0.5">
-                                <Label>SMS Alerts</Label>
-                                <p className="text-xs text-muted-foreground">
-                                   Get critical alerts for system updates or billing issues.
-                                </p>
-                            </div>
-                            <Switch />
-                        </div>
-                    </CardContent>
-                </Card>
+            <div className="max-w-4xl mx-auto w-full space-y-12">
+                 <header>
+                    <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+                    <p className="text-muted-foreground mt-1">Manage your integrations, notifications, and preferences.</p>
+                </header>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Wallet className="h-6 w-6" />
-                            Communication Usage
-                        </CardTitle>
-                        <CardDescription>
-                            Your remaining monthly quota for each channel.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                        {Object.entries(usageData).map(([channel, data]) => (
-                            <div key={channel}>
-                                <div className="flex items-center justify-between mb-1">
-                                    <div className="flex items-center gap-3">
-                                        {channelIcons[channel as keyof typeof channelIcons]}
-                                        <Label className="font-semibold text-lg">{channel}</Label>
-                                    </div>
-                                    <span className="text-sm text-muted-foreground">
-                                        <span className="font-bold text-lg text-foreground">{data.limit - data.used}</span> / {data.limit} {data.unit} left
-                                    </span>
+                <section className="space-y-6">
+                    <div className="space-y-2">
+                        <h2 className="text-xl font-semibold flex items-center gap-2">
+                           <Plug className="h-5 w-5" /> Integrations
+                        </h2>
+                        <p className="text-muted-foreground">Connect third-party services to enhance your workflow.</p>
+                    </div>
+                    <Card className="hover:border-primary/40 transition-colors">
+                        <CardHeader className="flex flex-row items-center justify-between">
+                             <div className="flex items-center gap-4">
+                                <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border">
+                                   <GoogleDriveIcon className="h-8 w-8 text-gray-700 dark:text-gray-200" />
                                 </div>
-                                <Progress value={(data.used / data.limit) * 100} className="h-3" />
-                                <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-                                    <span>Used: {data.used}</span>
-                                    <span>Limit: {data.limit}</span>
+                                <div>
+                                    <CardTitle className="text-lg">Google Drive</CardTitle>
+                                    <CardDescription>Store customer documents securely in your own Google Drive.</CardDescription>
                                 </div>
                             </div>
-                        ))}
-                    </CardContent>
-                    <CardFooter className="border-t pt-4">
-                         <p className="text-xs text-muted-foreground">
-                            Your usage quotas reset on the 1st of every month. To upgrade your plan, please contact support.
-                        </p>
-                    </CardFooter>
-                </Card>
-
-                <div className="flex justify-end">
-                    <Button onClick={handleSaveChanges}>Save Changes</Button>
+                            <Button variant="outline">
+                                Connect <ArrowRight className="ml-2 h-4 w-4"/>
+                            </Button>
+                        </CardHeader>
+                    </Card>
+                    <Card className="hover:border-primary/40 transition-colors">
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-green-100 dark:bg-green-900/50 rounded-lg border">
+                                    <WhatsAppIcon className="h-8 w-8 text-green-600 dark:text-green-400" />
+                                </div>
+                                <div>
+                                    <CardTitle className="text-lg">WhatsApp Business</CardTitle>
+                                    <CardDescription>Serve customer through whatsapp</CardDescription>
+                                </div>
+                            </div>
+                            <Button variant="outline">
+                                Connect <ArrowRight className="ml-2 h-4 w-4"/>
+                            </Button>
+                        </CardHeader>
+                    </Card>
+                </section>
+                
+                 <section className="space-y-6">
+                    <div className="space-y-2">
+                        <h2 className="text-xl font-semibold flex items-center gap-2">
+                           <SlidersHorizontal className="h-5 w-5" /> General Settings
+                        </h2>
+                        <p className="text-muted-foreground">Customize notifications and appearance for your workspace.</p>
+                    </div>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="text-base">Notification Settings</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors">
+                                <Label htmlFor="email-notifications" className="font-normal">Email Notifications</Label>
+                                <Switch id="email-notifications" defaultChecked />
+                            </div>
+                            <div className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors">
+                                <Label htmlFor="sms-alerts" className="font-normal">SMS Alerts for Critical Events</Label>
+                                <Switch id="sms-alerts" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </section>
+                
+                <div className="flex justify-end pt-4 border-t">
+                    <Button size="lg" onClick={handleSaveChanges}>
+                        Save Changes
+                    </Button>
                 </div>
             </div>
         </main>

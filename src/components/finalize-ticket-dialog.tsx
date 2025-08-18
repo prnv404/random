@@ -57,17 +57,16 @@ export const FinalizeTicketDialog = ({ isOpen, setIsOpen, ticket, service, onCon
     const [customerId, setCustomerId] = useState<string | null>(null);
 
     const isTbd = ticket.amount <= 0;
-    const canTrackExpiry = service?.meta_data?.documents && service.meta_data.documents.length > 0;
     
     const resetState = useCallback(() => {
         setAmount(isTbd ? '' : String(ticket.amount ?? ''));
         setSendInvoice(false);
         setInvoiceMethod('whatsapp');
         setTrackExpiry(false);
-        setDocType(service?.meta_data?.documents?.[0] || '');
+        setDocType(ticket.serviceType); // Default doc type to service name
         setExpiryDate('');
         setIsSubmitting(false);
-    }, [isTbd, ticket.amount, service?.meta_data]);
+    }, [isTbd, ticket.amount, ticket.serviceType]);
 
     useEffect(() => {
         if(isOpen) {
@@ -150,43 +149,38 @@ export const FinalizeTicketDialog = ({ isOpen, setIsOpen, ticket, service, onCon
                     )}
                    
                     {/* Expiry Section */}
-                    {canTrackExpiry && (
-                         <div>
-                            <Separator className="my-4" />
-                            <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
-                                <div className="space-y-0.5">
-                                    <Label htmlFor="track-expiry" className="font-semibold">Track Document Expiry</Label>
-                                    <p className="text-xs text-muted-foreground">
-                                        Record renewal date for this document.
-                                    </p>
-                                </div>
-                                <Switch id="track-expiry" checked={trackExpiry} onCheckedChange={setTrackExpiry} disabled={!customerId} />
+                    <div>
+                        <Separator className="my-4" />
+                        <div className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                                <Label htmlFor="track-expiry" className="font-semibold">Track Document Expiry</Label>
+                                <p className="text-xs text-muted-foreground">
+                                    Record renewal date for this document.
+                                </p>
                             </div>
-                             {!customerId && <p className="text-xs text-destructive mt-1">Customer record not found, cannot track expiry.</p>}
+                            <Switch id="track-expiry" checked={trackExpiry} onCheckedChange={setTrackExpiry} disabled={!customerId} />
+                        </div>
+                            {!customerId && <p className="text-xs text-destructive mt-1">Customer record not found, cannot track expiry.</p>}
 
-                            {trackExpiry && customerId && (
-                                <div className="space-y-4 pt-4 pl-3 border-l-2 ml-3">
-                                    <div>
-                                        <Label htmlFor="docType">Document Type</Label>
-                                        <Select value={docType} onValueChange={setDocType}>
-                                            <SelectTrigger id="docType" className="mt-1">
-                                                <SelectValue placeholder="Select document type..." />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {service.meta_data!.documents!.map(doc => (
-                                                    <SelectItem key={doc} value={doc}>{doc}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="expiryDate">Expiry Date</Label>
-                                        <Input id="expiryDate" type="date" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)} className="mt-1" />
-                                    </div>
+                        {trackExpiry && customerId && (
+                            <div className="space-y-4 pt-4 pl-3 border-l-2 ml-3">
+                                <div>
+                                    <Label htmlFor="docType">Document Type</Label>
+                                    <Input 
+                                        id="docType"
+                                        value={docType}
+                                        onChange={(e) => setDocType(e.target.value)}
+                                        placeholder="e.g., Driving License"
+                                        className="mt-1"
+                                    />
                                 </div>
-                            )}
-                         </div>
-                    )}
+                                <div>
+                                    <Label htmlFor="expiryDate">Expiry Date</Label>
+                                    <Input id="expiryDate" type="date" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)} className="mt-1" />
+                                </div>
+                            </div>
+                        )}
+                    </div>
 
                     {/* Invoice Section */}
                     <div>

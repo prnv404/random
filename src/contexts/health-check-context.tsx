@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { checkHealth } from '@/services/health';
 import { ServerDownPage } from '@/components/server-down-page';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ApiError } from '@/lib/api';
 
 interface HealthContextType {
   isServerHealthy: boolean;
@@ -24,7 +25,6 @@ export const HealthCheckProvider = ({ children }: { children: ReactNode }) => {
     const performHealthCheck = async () => {
       try {
         const healthStatus = await checkHealth();
-        // Check for a specific property that indicates success, e.g., healthStatus.status === 'ok'
         if (healthStatus && healthStatus.status === 'ok') {
           setIsServerHealthy(true);
         } else {
@@ -32,7 +32,13 @@ export const HealthCheckProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (error) {
         console.error("Health check failed:", error);
-        setIsServerHealthy(false);
+        if (error instanceof ApiError && error.status === 502) {
+          setIsServerHealthy(false);
+        } else {
+          // For any other error (network, other server errors), assume it's a transient client-side issue and let the app load.
+          // The individual components can handle their own data fetching errors.
+          setIsServerHealthy(true);
+        }
       } finally {
         setIsLoading(false);
       }

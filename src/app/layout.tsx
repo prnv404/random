@@ -9,8 +9,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Header } from "@/components/header";
 import { HealthCheckProvider } from "@/contexts/health-check-context";
 
-
-
 const ptSans = PT_Sans({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -31,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <head>
           <script defer data-workspace="68a0aa362493235550985791" 
             src="https://cdn.jsdelivr.net/npm/litlyx-js@latest/browser/litlyx.js"></script>
@@ -42,12 +40,12 @@ export default function RootLayout({
             ptSans.variable
           )}
         >
-          <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
-          <HealthCheckProvider>
-            <Header />
-            {children}
-            <Toaster />
-          </HealthCheckProvider>
+            <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
+            <HealthCheckProvider>
+              <Header />
+              {children}
+              <Toaster />
+            </HealthCheckProvider>
         </body>
       </html>
     </ClerkProvider>
