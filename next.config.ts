@@ -19,11 +19,9 @@ const withPWA = withPWAInit({
     // Solution: https://github.com/DuCanh2912/next-pwa/issues/485
     skipWaiting: true,
   },
-  // Solution: https://github.com/DuCanh2912/next-pwa/issues/524
-  icon: {
-    source: 'public/svvvvddddfff.svg',
-    sizes: [192, 512],
-  },
+  // By default, next-pwa will generate a manifest file for you. 
+  // You can customize the manifest file by creating a manifest.json file in your public folder.
+  // The start_url is set to /dashboard.
 });
 
 
