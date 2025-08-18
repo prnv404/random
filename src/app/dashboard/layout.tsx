@@ -48,17 +48,11 @@ export default function DashboardLayout({
             <SidebarProvider>
             <Sidebar>
                 <SidebarHeader>
-                <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" className="shrink-0" asChild>
-                    <Link href="/dashboard">
+                    <Link href="/dashboard" className="flex items-center gap-2">
                         <Logo className="size-5" />
+                        <span className="font-semibold text-lg group-data-[collapsible=icon]:hidden">SNAP GRID</span>
+                        <Badge variant="secondary" className="group-data-[collapsible=icon]:hidden">BETA</Badge>
                     </Link>
-                    </Button>
-                    <div className="flex items-center gap-2">
-                    <span className="font-headline text-lg font-semibold">SNAP GRID</span>
-                    <Badge variant="secondary">BETA</Badge>
-                    </div>
-                </div>
                 </SidebarHeader>
                 <SidebarContent>
                 <SidebarMenu className="mt-8">
@@ -148,16 +142,6 @@ export default function DashboardLayout({
                         <>
                             <Settings />
                             <span>Settings</span>
-                        </>
-                        </SidebarMenuButton>
-                    </Link>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                    <Link href="/dashboard/settings/services" passHref>
-                        <SidebarMenuButton tooltip="Services" size="lg">
-                        <>
-                            <Briefcase />
-                            <span>Services</span>
                         </>
                         </SidebarMenuButton>
                     </Link>

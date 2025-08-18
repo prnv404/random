@@ -19,7 +19,7 @@ export function Header() {
             <div className="container flex h-16 items-center justify-between">
                 <Link href="/home" className="flex items-center gap-2">
                     <Logo className="h-6 w-6 text-primary" />
-                    <span className="font-bold text-xl">SNAP GRID</span>
+                    <span className="font-bold text-lg">SNAP GRID</span>
                 </Link>
                 <div className="flex items-center gap-4">
                     <SignedOut>

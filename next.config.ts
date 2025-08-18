@@ -5,6 +5,25 @@ import withPWAInit from '@ducanh2912/next-pwa';
 const withPWA = withPWAInit({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
+  // Solution: https://github.com/DuCanh2912/next-pwa/issues/533
+  pwaExcludes: [/^(?!.*(?:apple-touch-icon|favicon|manifest)).*/],
+  extendDefaultRuntimeCaching: true,
+  fallbacks: {
+    //image: "/static/images/fallback.png",
+    //font: "/static/font/fallback.woff2",
+    document: '/_offline',
+  },
+  cacheOnNavigation: true,
+  aggressiveFrontEndNavCaching: true,
+  workboxOptions: {
+    // Solution: https://github.com/DuCanh2912/next-pwa/issues/485
+    skipWaiting: true,
+  },
+  // Solution: https://github.com/DuCanh2912/next-pwa/issues/524
+  icon: {
+    source: 'public/svvvvddddfff.svg',
+    sizes: [192, 512],
+  },
 });
 
 
@@ -33,12 +52,6 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'i.ibb.co',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.postimg.cc',
         port: '',
         pathname: '/**',
       },

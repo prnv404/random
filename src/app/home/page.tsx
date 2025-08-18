@@ -209,7 +209,6 @@ export default function LandingPage() {
             "Digital Marketing Tools",
             "Advanced Analytics & Reports",
             "Multi-User Access (1 User included)",
-            "₹300/month for each additional user",
             "Priority Email Support"
         ],
         cta: "Contact Sales",
@@ -223,7 +222,6 @@ export default function LandingPage() {
             "Unlimited Customers",
             "All Professional Features",
             "Unlimited User Access",
-            "Dedicated Account Manager",
             "Custom Integrations",
             "24/7 Premium Support",
         ],
@@ -516,8 +514,8 @@ export default function LandingPage() {
       <footer className="border-t mt-20">
         <div className="container py-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-                <Logo className="h-6 w-6 text-primary" />
-                <span className="font-bold text-xl">SNAP GRID</span>
+                <Logo className="h-5 w-5" />
+                <span className="font-semibold">SNAP GRID</span>
             </div>
             <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} SNAP GRID. All rights reserved.</p>
              <div className="flex items-center gap-4 text-muted-foreground">

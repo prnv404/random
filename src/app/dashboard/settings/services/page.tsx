@@ -132,7 +132,7 @@ const ServicesPageComponent = () => {
 
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
+            <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-5">
                 <div className="lg:col-span-2">
                      <form onSubmit={handleSubmit}>
                         <Card className="shadow-sm sticky top-20">
@@ -193,7 +193,7 @@ const ServicesPageComponent = () => {
                              <div className="space-y-6">
                                 <div>
                                     <h3 className="font-semibold text-lg mb-2">Custom Services</h3>
-                                    <div className="border rounded-lg">
+                                    <div className="border rounded-lg overflow-x-auto">
                                         {isLoading ? <Skeleton className="h-40 w-full" /> : (
                                             customServices.length > 0 ? (
                                                 <Table>
@@ -206,7 +206,7 @@ const ServicesPageComponent = () => {
                                                     </TableHeader>
                                                     <TableBody>
                                                         {customServices.map(service => (
-                                                            <TableRow key={`custom-${service.name}`}>
+                                                            <TableRow key={`custom-${service.id}`}>
                                                                 <TableCell className="font-medium">{service.name}</TableCell>
                                                                 <TableCell>{service.amount ? `₹${service.amount}`: 'N/A'}</TableCell>
                                                                 <TableCell className="text-right">
@@ -232,7 +232,7 @@ const ServicesPageComponent = () => {
 
                                 <div>
                                     <h3 className="font-semibold text-lg mb-2">Common Services</h3>
-                                     <div className="border rounded-lg">
+                                     <div className="border rounded-lg overflow-x-auto">
                                         {isLoading ? <Skeleton className="h-40 w-full" /> : (
                                             commonServices.length > 0 ? (
                                             <Table>
@@ -244,7 +244,7 @@ const ServicesPageComponent = () => {
                                                     </TableHeader>
                                                     <TableBody>
                                                         {commonServices.map(service => (
-                                                            <TableRow key={`common-${service.name}`}>
+                                                            <TableRow key={`common-${service.id}`}>
                                                                 <TableCell className="font-medium">{service.name}</TableCell>
                                                                 <TableCell>{service.amount ? `₹${service.amount}`: 'N/A'}</TableCell>
                                                             </TableRow>

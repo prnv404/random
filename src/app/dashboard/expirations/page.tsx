@@ -37,11 +37,14 @@ import { SendAlertDialog } from '@/components/send-alert-dialog';
 import { useAuthContext } from '@/contexts/auth-context';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ExpirationCard } from '@/components/expiration-card';
 
 const ExpirationsPageComponent = () => {
     const router = useRouter();
     const { authToken } = useAuthContext();
     const { toast } = useToast();
+    const isMobile = useIsMobile();
 
     const [expirations, setExpirations] = useState<ExpirationItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -111,15 +114,15 @@ const ExpirationsPageComponent = () => {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex items-center gap-4 mb-6">
+                    <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
                         <Input
                             placeholder="Search by customer name..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="max-w-sm"
+                            className="max-w-sm w-full"
                         />
                         <Select value={filterRange} onValueChange={setFilterRange}>
-                            <SelectTrigger className="w-[220px]">
+                            <SelectTrigger className="w-full md:w-[220px]">
                                 <SelectValue placeholder="Filter by expiry range" />
                             </SelectTrigger>
                             <SelectContent>
@@ -131,55 +134,80 @@ const ExpirationsPageComponent = () => {
                         </Select>
                     </div>
 
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Customer</TableHead>
-                                <TableHead>Document Type</TableHead>
-                                <TableHead>Expires On</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
+                    {isMobile ? (
+                        <div className="space-y-4">
                             {isLoading ? (
                                 Array.from({ length: 5 }).map((_, i) => (
-                                    <TableRow key={i}>
-                                        <TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell>
-                                    </TableRow>
+                                    <Skeleton key={i} className="h-40 w-full" />
                                 ))
-                            ) : expirations && expirations.length > 0 ? (
+                            ) : expirations.length > 0 ? (
                                 expirations.map((item) => (
-                                    <TableRow key={`${item.customer.id}-${item.document.number}`}>
-                                        <TableCell>
-                                            <div className="font-medium">{item.customer.name}</div>
-                                        </TableCell>
-                                        <TableCell>{item.document.type}</TableCell>
-                                        <TableCell>{format(parseISO(item.expiryDate), 'PPP')}</TableCell>
-                                        <TableCell>{getExpiryBadge(item.daysLeft)}</TableCell>
-                                        <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon" onClick={() => handleAlertClick(item)}>
-                                                <Bell className="h-4 w-4" />
-                                                <span className="sr-only">Send Alert</span>
-                                            </Button>
-                                            <Button variant="ghost" size="icon" asChild>
-                                                <Link href={`/dashboard/customers/${item.customer.id}`}>
-                                                    <ArrowUpRight className="h-4 w-4" />
-                                                    <span className="sr-only">View Customer</span>
-                                                </Link>
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
+                                    <ExpirationCard 
+                                        key={`${item.customer.id}-${item.document.number}`}
+                                        item={item} 
+                                        getExpiryBadge={getExpiryBadge} 
+                                        onAlertClick={handleAlertClick} 
+                                    />
                                 ))
                             ) : (
-                                <TableRow>
-                                    <TableCell colSpan={5} className="text-center h-24">
-                                        No documents expiring in the selected range.
-                                    </TableCell>
-                                </TableRow>
+                                <div className="text-center h-24 flex items-center justify-center text-muted-foreground">
+                                    No documents expiring in the selected range.
+                                </div>
                             )}
-                        </TableBody>
-                    </Table>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Customer</TableHead>
+                                        <TableHead>Document Type</TableHead>
+                                        <TableHead>Expires On</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead className="text-right">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {isLoading ? (
+                                        Array.from({ length: 5 }).map((_, i) => (
+                                            <TableRow key={i}>
+                                                <TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : expirations && expirations.length > 0 ? (
+                                        expirations.map((item) => (
+                                            <TableRow key={`${item.customer.id}-${item.document.number}`}>
+                                                <TableCell>
+                                                    <div className="font-medium">{item.customer.name}</div>
+                                                </TableCell>
+                                                <TableCell>{item.document.type}</TableCell>
+                                                <TableCell>{format(parseISO(item.expiryDate), 'PPP')}</TableCell>
+                                                <TableCell>{getExpiryBadge(item.daysLeft)}</TableCell>
+                                                <TableCell className="text-right">
+                                                    <Button variant="ghost" size="icon" onClick={() => handleAlertClick(item)}>
+                                                        <Bell className="h-4 w-4" />
+                                                        <span className="sr-only">Send Alert</span>
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" asChild>
+                                                        <Link href={`/dashboard/customers/${item.customer.id}`}>
+                                                            <ArrowUpRight className="h-4 w-4" />
+                                                            <span className="sr-only">View Customer</span>
+                                                        </Link>
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={5} className="text-center h-24">
+                                                No documents expiring in the selected range.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
         </main>

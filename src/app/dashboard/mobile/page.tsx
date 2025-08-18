@@ -132,11 +132,11 @@ const MobileDashboardComponent = () => {
                     <CardDescription>A snapshot of today's activity.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="flex gap-4">
+                    <div className="flex flex-col sm:flex-row gap-4">
                         <StatCard title="Revenue" metric={summaryData?.totalRevenue} icon={<IndianRupee className="h-4 w-4" />} isLoading={isLoading} />
                         <StatCard title="Customers" metric={summaryData?.totalCustomers} icon={<Users className="h-4 w-4" />} isLoading={isLoading} />
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex flex-col sm:flex-row gap-4">
                         <StatCard title="Services" metric={summaryData?.servicesDelivered} icon={<Briefcase className="h-4 w-4" />} isLoading={isLoading} />
                         <Card className="flex-1">
                             <CardHeader className="p-3 pb-0">

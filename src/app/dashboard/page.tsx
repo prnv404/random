@@ -52,7 +52,7 @@ const DashboardComponent =  () => {
     }
   }, [isMobile, router]);
 
-  const fetchDashboardData = useCallback(async (showToast = false) => {
+  const fetchDashboardData = useCallback(async () => {
     if (!authToken) return;
 
     setIsSummaryLoading(true);
@@ -87,22 +87,13 @@ const DashboardComponent =  () => {
         }
         setChartConfig(newChartConfig);
         
-        if (showToast) {
-             toast({
-                title: 'Dashboard Updated',
-                description: 'Your dashboard data has been refreshed.',
-            });
-        }
-
     } catch (error) {
         console.error(error);
-        if (showToast) {
-            toast({
-                variant: 'destructive',
-                title: 'Error Refreshing Data',
-                description: 'Could not fetch the latest dashboard data.',
-            });
-        }
+        toast({
+            variant: 'destructive',
+            title: 'Error Refreshing Data',
+            description: 'Could not fetch the latest dashboard data.',
+        });
     } finally {
         setIsSummaryLoading(false);
         setIsChartLoading(false);
@@ -115,20 +106,8 @@ useEffect(() => {
     if(isMobile === false) {
       fetchDashboardData();
     }
-}, [fetchDashboardData, period, isMobile]); // Run when component mounts and when period changes
+}, [fetchDashboardData, period, isMobile]);
 
-// Effect for setting up the 30-second polling
-useEffect(() => {
-    if (isMobile === false) {
-      const intervalId = setInterval(() => {
-          // Pass true to show a toast notification on background refresh
-          fetchDashboardData(true); 
-      }, 30000); // 30 seconds
-
-      // Cleanup function to clear the interval when the component unmounts
-      return () => clearInterval(intervalId);
-    }
-}, [fetchDashboardData, isMobile]);
 
   const handleGenerateReport = async () => {
     setIsLoadingReport(true);

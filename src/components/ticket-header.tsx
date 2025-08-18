@@ -44,9 +44,9 @@ export const TicketHeader = ({
                         onTicketCreated={onTicketCreated}
                     />
                      <Button asChild variant="outline" size="sm" className="gap-1">
-                        <Link href="/dashboard/settings/services">
+                        <Link href="/dashboard/settings">
                             <Settings className="h-4 w-4" />
-                            Manage Services
+                            Settings
                         </Link>
                     </Button>
                 </div>

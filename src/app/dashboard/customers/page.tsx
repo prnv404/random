@@ -202,7 +202,7 @@ const CustomersPageComponent = () => {
               <Button
                 variant={'outline'}
                 className={cn(
-                  'w-full md:w-[240px] justify-start text-left font-normal',
+                  'w-full md:w-auto justify-start text-left font-normal',
                   !joinDate && 'text-muted-foreground'
                 )}
               >
@@ -227,59 +227,61 @@ const CustomersPageComponent = () => {
             )}
         </div>
         <CardContent className="pt-6">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Customer</TableHead>
-                <TableHead className="hidden sm:table-cell">Phone Number</TableHead>
-                <TableHead className="hidden md:table-cell">Join Date</TableHead>
-                <TableHead className="hidden lg:table-cell">Last Visit</TableHead>
-                <TableHead>
-                  <span className="sr-only">Actions</span>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell>
-                  </TableRow>
-                ))
-              ) : customerData && customerData.customers.length > 0 ? (
-                customerData.customers.map((customer) => (
-                  <TableRow key={customer.id}>
-                    <TableCell>
-                      <div className="font-medium">{customer.name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {customer.email || customer.phone}
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">{customer.phone}</TableCell>
-                    <TableCell className="hidden md:table-cell">{customer.joinDate ? format(parseISO(customer.joinDate), 'PPP') : 'N/A'}</TableCell>
-                    <TableCell className="hidden lg:table-cell">{customer.lastVisit ? format(parseISO(customer.lastVisit), 'PPP') : 'N/A'}</TableCell>
-                    <TableCell>
-                      <div className="flex justify-end">
-                        <Button asChild variant="ghost" size="icon">
-                          <Link href={`/dashboard/customers/${customer.id}`}>
-                            <ArrowUpRight className="h-4 w-4" />
-                            <span className="sr-only">View customer</span>
-                          </Link>
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center h-24">No customers found.</TableCell>
+                  <TableHead>Customer</TableHead>
+                  <TableHead className="hidden sm:table-cell">Phone Number</TableHead>
+                  <TableHead className="hidden md:table-cell">Join Date</TableHead>
+                  <TableHead className="hidden lg:table-cell">Last Visit</TableHead>
+                  <TableHead>
+                    <span className="sr-only">Actions</span>
+                  </TableHead>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell>
+                    </TableRow>
+                  ))
+                ) : customerData && customerData.customers.length > 0 ? (
+                  customerData.customers.map((customer) => (
+                    <TableRow key={customer.id}>
+                      <TableCell>
+                        <div className="font-medium">{customer.name}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {customer.email || customer.phone}
+                        </div>
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell">{customer.phone}</TableCell>
+                      <TableCell className="hidden md:table-cell">{customer.joinDate ? format(parseISO(customer.joinDate), 'PPP') : 'N/A'}</TableCell>
+                      <TableCell className="hidden lg:table-cell">{customer.lastVisit ? format(parseISO(customer.lastVisit), 'PPP') : 'N/A'}</TableCell>
+                      <TableCell>
+                        <div className="flex justify-end">
+                          <Button asChild variant="ghost" size="icon">
+                            <Link href={`/dashboard/customers/${customer.id}`}>
+                              <ArrowUpRight className="h-4 w-4" />
+                              <span className="sr-only">View customer</span>
+                            </Link>
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center h-24">No customers found.</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
         {customerData && customerData.pagination && customerData.pagination.totalCustomers > 0 && (
-          <CardFooter className="flex items-center justify-between">
+          <CardFooter className="flex items-center justify-between flex-wrap gap-y-4">
             <div className="text-sm text-muted-foreground">
               Showing {(customerData.pagination.currentPage - 1) * ITEMS_PER_PAGE + 1} to {Math.min(customerData.pagination.currentPage * ITEMS_PER_PAGE, customerData.pagination.totalCustomers)} of {customerData.pagination.totalCustomers} customers
             </div>
@@ -316,5 +318,3 @@ const CustomersPageComponent = () => {
 const CustomersPage = dynamic(() => Promise.resolve(CustomersPageComponent), { ssr: false });
 
 export default CustomersPage;
-
-    

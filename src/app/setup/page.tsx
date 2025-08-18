@@ -79,7 +79,6 @@ export default function SetupPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-muted/40 p-4">
         <div className="flex items-center gap-2 mb-8">
             <Logo className="h-8 w-8 text-primary" />
-            <span className="font-bold text-2xl">SNAP GRID</span>
         </div>
       <Card className="w-full max-w-2xl">
         <CardHeader className="text-center">

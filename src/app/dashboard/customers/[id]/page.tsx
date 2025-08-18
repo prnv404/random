@@ -219,7 +219,7 @@ const CustomerDetailComponent = () => {
                         </DialogContent>
                     </Dialog>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="overflow-x-auto">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -258,7 +258,7 @@ const CustomerDetailComponent = () => {
              </Card>
         </div>
 
-        <div>
+        <div className="lg:col-span-1 grid auto-rows-max gap-6">
             <Card>
                 <CardHeader>
                     <div className='flex items-center gap-2'>

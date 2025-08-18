@@ -36,6 +36,8 @@ import { useAuthContext } from '@/contexts/auth-context';
 import type { CallLog, PaginatedCallLog } from '@/lib/types';
 import { listCalls, createCall } from '@/services/calls';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { CallLogCard } from '@/components/call-log-card';
 
 const DialPad = ({ initialNumber = '', onNumberChange, onCall, onHangUp }: { initialNumber?: string, onNumberChange: (number: string) => void, onCall: () => void, onHangUp: () => void }) => {
     const [number, setNumber] = useState(initialNumber);
@@ -101,6 +103,7 @@ const CallsPageComponent = () => {
     const searchParams = useSearchParams();
     const { authToken } = useAuthContext();
     const { toast } = useToast();
+    const isMobile = useIsMobile();
     
     const [callData, setCallData] = useState<PaginatedCallLog | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -209,7 +212,7 @@ const CallsPageComponent = () => {
             <DialogTrigger asChild>
                 <Button size="sm" className="gap-1" onClick={() => { setDialerNumber(''); setIsDialerOpen(true); }}>
                     <PlusCircle className="h-4 w-4" />
-                    Make a Call
+                    {isMobile ? 'New Call' : 'Make a Call'}
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-xs">
@@ -226,6 +229,29 @@ const CallsPageComponent = () => {
           </Dialog>
         </CardHeader>
         <CardContent>
+        {isMobile ? (
+            <div className="space-y-4">
+                 {isLoading ? (
+                    Array.from({ length: 5 }).map((_, i) => (
+                        <Skeleton key={i} className="h-40 w-full" />
+                    ))
+                ) : callData && callData.callLogs.length > 0 ? (
+                    callData.callLogs.map((log) => (
+                        <CallLogCard 
+                            key={log.id} 
+                            log={log} 
+                            callTypeIcons={callTypeIcons}
+                            activeRecording={activeRecording}
+                            onPlayRecording={handlePlayRecording}
+                        />
+                    ))
+                ) : (
+                    <div className="text-center h-24 flex items-center justify-center text-muted-foreground">
+                        No call logs found.
+                    </div>
+                )}
+            </div>
+        ) : (
           <Table>
             <TableHeader>
               <TableRow>
@@ -291,10 +317,11 @@ const CallsPageComponent = () => {
               )}
             </TableBody>
           </Table>
+        )}
            <audio ref={audioRef} onEnded={() => setActiveRecording(null)} className="hidden" />
         </CardContent>
          {callData && callData.pagination && callData.pagination.totalLogs > 0 && (
-            <CardFooter className="flex items-center justify-between">
+            <CardFooter className="flex items-center justify-between flex-wrap gap-4">
                 <div className="text-sm text-muted-foreground">
                     Showing page {callData.pagination.currentPage} of {callData.pagination.totalPages}
                 </div>

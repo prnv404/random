@@ -38,7 +38,7 @@ const BillingPageComponent = () => {
             Generate Invoice
           </Button>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
