@@ -2,27 +2,27 @@
 import type {NextConfig} from 'next';
 import withPWAInit from '@ducanh2912/next-pwa';
 
-// const withPWA = withPWAInit({
-//   dest: 'public',
-//   disable: process.env.NODE_ENV === 'development',
-//   // Solution: https://github.com/DuCanh2912/next-pwa/issues/533
-//   pwaExcludes: [/^(?!.*(?:apple-touch-icon|favicon|manifest)).*/],
-//   extendDefaultRuntimeCaching: true,
-//   fallbacks: {
-//     //image: "/static/images/fallback.png",
-//     //font: "/static/font/fallback.woff2",
-//     document: '/_offline',
-//   },
-//   cacheOnNavigation: true,
-//   aggressiveFrontEndNavCaching: true,
-//   workboxOptions: {
-//     // Solution: https://github.com/DuCanh2912/next-pwa/issues/485
-//     skipWaiting: true,
-//   },
-//   // By default, next-pwa will generate a manifest file for you. 
-//   // You can customize the manifest file by creating a manifest.json file in your public folder.
-//   // The start_url is set to /dashboard.
-// });
+const withPWA = withPWAInit({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+  // Solution: https://github.com/DuCanh2912/next-pwa/issues/533
+  pwaExcludes: [/^(?!.*(?:apple-touch-icon|favicon|manifest)).*/],
+  extendDefaultRuntimeCaching: true,
+  fallbacks: {
+    //image: "/static/images/fallback.png",
+    //font: "/static/font/fallback.woff2",
+    document: '/_offline',
+  },
+  cacheOnNavigation: true,
+  aggressiveFrontEndNavCaching: true,
+  workboxOptions: {
+    // Solution: https://github.com/DuCanh2912/next-pwa/issues/485
+    skipWaiting: true,
+  },
+  // By default, next-pwa will generate a manifest file for you. 
+  // You can customize the manifest file by creating a manifest.json file in your public folder.
+  // The start_url is set to /dashboard.
+});
 
 
 const nextConfig: NextConfig = {
@@ -75,6 +75,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-// export default withPWA(nextConfig);
+export default withPWA(nextConfig);
 
     
