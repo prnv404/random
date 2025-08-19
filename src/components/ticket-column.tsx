@@ -57,19 +57,21 @@ export const TicketColumn = ({
                 <Skeleton key={i} className="h-48 w-full mb-4" />
                 ))
             ) : tickets && tickets.length > 0 ? (
-                tickets.map(ticket => (
-                    <TicketCard 
-                        key={ticket.id} 
-                        ticket={ticket} 
-                        onStatusChange={onStatusChange} 
-                        onDragStart={onDragStart}
-                        onAlertClick={onAlertClick}
-                        onEditClick={onEditClick}
-                        servicePortals={servicePortals}
-                    />
-                ))
+                <div className="flex-1 space-y-2">
+                    {tickets.map(ticket => (
+                        <TicketCard 
+                            key={ticket.id} 
+                            ticket={ticket} 
+                            onStatusChange={onStatusChange} 
+                            onDragStart={onDragStart}
+                            onAlertClick={onAlertClick}
+                            onEditClick={onEditClick}
+                            servicePortals={servicePortals}
+                        />
+                    ))}
+                </div>
             ) : (
-                <div className="flex items-center justify-center h-full text-sm text-muted-foreground p-4">
+                <div className="flex-1 flex items-center justify-center h-full text-sm text-muted-foreground p-4">
                     <Card className="w-full border-dashed">
                         <CardContent className="p-6 text-center">
                             No tickets in this stage.
@@ -91,7 +93,7 @@ export const TicketColumn = ({
 
     return (
         <div 
-            className={cn("flex flex-col h-full bg-muted/40 rounded-lg p-1 transition-colors duration-200", {
+            className={cn("flex flex-col h-full bg-muted/40 rounded-lg transition-colors duration-200", {
                 "bg-primary/10": dragOverStatus === status
             })}
             onDragOver={onDragOver}
@@ -103,7 +105,7 @@ export const TicketColumn = ({
                 <h2 className="font-semibold text-lg capitalize">{statusConfig[status].label}</h2>
             </div>
             <ScrollArea className="flex-1 -mr-1 pr-1">
-                <div className="p-3 pt-0">
+                <div className="p-3 pt-0 h-full flex flex-col">
                    <TicketList />
                 </div>
             </ScrollArea>

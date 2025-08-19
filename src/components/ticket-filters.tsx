@@ -1,7 +1,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -29,10 +29,25 @@ interface TicketFiltersProps {
 
 export const TicketFilters = ({ filters, setFilters, users, uniqueServiceTypes }: TicketFiltersProps) => {
     const isMobile = useIsMobile();
+    const [localSearchTerm, setLocalSearchTerm] = useState(filters.searchTerm);
 
     const handleFilterChange = (key: keyof typeof filters, value: any) => {
         setFilters(prev => ({ ...prev, [key]: value }));
     };
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            handleFilterChange('searchTerm', localSearchTerm);
+        }, 300); // 300ms debounce delay
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [localSearchTerm]);
+
+    useEffect(() => {
+        setLocalSearchTerm(filters.searchTerm);
+    },[filters.searchTerm])
 
     const clearFilters = () => {
         setFilters({
@@ -49,8 +64,8 @@ export const TicketFilters = ({ filters, setFilters, users, uniqueServiceTypes }
         <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 p-4">
              <Input 
                 placeholder="Search by name or Ticket ID..."
-                value={filters.searchTerm}
-                onChange={(e) => handleFilterChange('searchTerm', e.target.value)}
+                value={localSearchTerm}
+                onChange={(e) => setLocalSearchTerm(e.target.value)}
                 className="w-full md:max-w-xs"
             />
              <Select value={filters.employeeId} onValueChange={(val) => handleFilterChange('employeeId', val)}>

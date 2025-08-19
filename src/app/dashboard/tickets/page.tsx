@@ -58,6 +58,8 @@ const TicketsPageComponent = () => {
   
   const [confirmationState, setConfirmationState] = useState<{ isOpen: boolean; ticketId: string | null; targetStatus: Ticket['status'] | null }>({ isOpen: false, ticketId: null, targetStatus: null });
 
+  const { searchTerm, employeeId, serviceType, date } = filters;
+
   const fetchInitialData = useCallback(async (showLoading = true) => {
     if (!authToken) return;
     if(showLoading) setIsLoading(true);
@@ -65,10 +67,10 @@ const TicketsPageComponent = () => {
     try {
         const [tickets, usersData, servicesData] = await Promise.all([
             listTickets({
-                search: filters.searchTerm,
-                employeeId: filters.employeeId !== 'all' ? filters.employeeId : undefined,
-                serviceType: filters.serviceType !== 'all' ? filters.serviceType : undefined,
-                createdAt: filters.date ? format(filters.date, 'yyyy-MM-dd') : undefined,
+                search: searchTerm,
+                employeeId: employeeId !== 'all' ? employeeId : undefined,
+                serviceType: serviceType !== 'all' ? serviceType : undefined,
+                createdAt: date ? format(date, 'yyyy-MM-dd') : undefined,
             }, authToken),
             listUsers(authToken),
             listServices(authToken)
@@ -81,7 +83,7 @@ const TicketsPageComponent = () => {
     } finally {
         if(showLoading) setIsLoading(false);
     }
-  }, [authToken, filters, toast]);
+  }, [authToken, searchTerm, employeeId, serviceType, date, toast]);
 
   useEffect(() => {
     fetchInitialData();
@@ -321,3 +323,5 @@ const TicketsPage = dynamic(() => Promise.resolve(TicketsPageComponent), { ssr: 
 
 export default TicketsPage;
 
+
+    

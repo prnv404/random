@@ -14,7 +14,9 @@ import {
   Wallet,
   Settings,
   Briefcase,
+  User,
 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 import {
   SidebarProvider,
@@ -33,19 +35,41 @@ import { Separator } from '@/components/ui/separator';
 import { DashboardHeader } from '@/components/dashboard-header';
 import { Badge } from '@/components/ui/badge';
 import { SignedIn } from '@clerk/nextjs';
-import { AuthProvider } from '@/contexts/auth-context';
+import { AuthProvider, useAuthContext } from '@/contexts/auth-context';
+import { getUserProfile } from '@/services/user';
+import { OnboardingDialog } from '@/components/onboarding-dialog';
+import type { User as UserType } from '@/lib/types';
 
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const DashboardLayoutContent = ({ children }: { children: React.ReactNode }) => {
+    const { authToken } = useAuthContext();
+    const [user, setUser] = useState<UserType | null>(null);
+    const [showOnboarding, setShowOnboarding] = useState(false);
 
-  return (
-      <SignedIn>
-        <AuthProvider>
-            <SidebarProvider>
+    useEffect(() => {
+        const checkUserProfile = async () => {
+            if (authToken) {
+                try {
+                    const profile = await getUserProfile(authToken);
+                    setUser(profile);
+                    if (!profile.name || !profile.phone) {
+                        setShowOnboarding(true);
+                    }
+                } catch (error) {
+                    console.error("Failed to fetch user profile", error);
+                }
+            }
+        };
+        checkUserProfile();
+    }, [authToken]);
+
+    const handleOnboardingComplete = (updatedUser: UserType) => {
+        setUser(updatedUser);
+        setShowOnboarding(false);
+    };
+
+    return (
+        <SidebarProvider>
             <Sidebar>
                 <SidebarHeader>
                     <Link href="/dashboard" className="flex items-center gap-2">
@@ -164,10 +188,29 @@ export default function DashboardLayout({
                 <DashboardHeader className="sticky top-0 z-10" />
                 <main className="flex-1 overflow-y-auto">{children}</main>
             </SidebarInset>
-            </SidebarProvider>
+            {user && (
+                <OnboardingDialog 
+                    isOpen={showOnboarding}
+                    user={user}
+                    onFinished={handleOnboardingComplete}
+                />
+            )}
+        </SidebarProvider>
+    )
+}
+
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+
+  return (
+      <SignedIn>
+        <AuthProvider>
+            <DashboardLayoutContent>{children}</DashboardLayoutContent>
         </AuthProvider>
       </SignedIn>
   );
 }
-
-    

@@ -1,3 +1,4 @@
+
 'use client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -28,6 +29,7 @@ export const PerformanceTables = ({ employeePerformance, servicePerformance, isP
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead className="w-[50px]">Rank</TableHead>
                                 <TableHead>Employee</TableHead>
                                 <TableHead className="text-center">Services Delivered</TableHead>
                                 <TableHead className="text-right">Revenue Generated</TableHead>
@@ -40,13 +42,16 @@ export const PerformanceTables = ({ employeePerformance, servicePerformance, isP
                                         <TableCell><Skeleton className="h-10 w-full" /></TableCell>
                                         <TableCell><Skeleton className="h-10 w-full" /></TableCell>
                                         <TableCell><Skeleton className="h-10 w-full" /></TableCell>
+                                        <TableCell><Skeleton className="h-10 w-full" /></TableCell>
                                     </TableRow>
                                 ))
                             ) : employeePerformance.map((emp, index) => (
                                 <TableRow key={emp.employeeId}>
+                                    <TableCell className="font-bold text-center">
+                                        {index === 0 ? <Award className="h-5 w-5 text-yellow-500 mx-auto" /> : index + 1}
+                                    </TableCell>
                                     <TableCell>
                                         <div className="flex items-center gap-3">
-                                            {index === 0 && <Award className="h-5 w-5 text-yellow-500" />}
                                             <Avatar className="h-9 w-9">
                                                 <AvatarImage src={emp.avatarUrl} alt={emp.employeeName} data-ai-hint="person avatar" />
                                                 <AvatarFallback>{emp.employeeName.charAt(0)}</AvatarFallback>
